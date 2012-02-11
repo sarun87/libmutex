@@ -34,4 +34,5 @@ int mythread_mutex_lock(mythread_mutex_t *mutex);
 
 int mythread_mutex_unlock(mythread_mutex_t *mutex);
 
+int __test_test_and_set(mythread_mutex_t *mutex);
 #endif
