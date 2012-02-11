@@ -3,20 +3,35 @@ ksriram Arun Sriraman
 shyamp Shyam Prasad
 vineet Vineet Krishnan
 */
-#ifdef __MYMUTEX_H
 
 #include "mythread.h"
+#include "futex.h"
 
-int pthread_mutexattr_init(pthread_mutexattr_t *attr);
+#ifndef __MYMUTEX_H
+#define __MYMUTEX_H
 
-int pthread_mutexattr_destroy(pthread_mutexattr_t *attr);
 
-int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+#define MUTEX_LOCKED 1
+#define MUTEX_UNLOCKED 0
 
-int pthread_mutex_destroy(pthread_mutex_t *mutex);
+typedef struct mythread_mutex_t
+{
+	int owner;
+	unsigned int lock;
+	mythread_queue_t block_queue;
+} mythread_mutex_t;
 
-int pthread_mutex_lock(pthread_mutex_t *mutex)
+typedef struct mythread_mutexattr_t
+{
+	int attr;
+} mythread_mutexattr_t;
 
-int pthread_mutex_unlock(pthread_mutex_t *mutex);
+int mythread_mutex_init(mythread_mutex_t *mutex, const mythread_mutexattr_t *attr);
+
+int mythread_mutex_destroy(mythread_mutex_t *mutex);
+
+int mythread_mutex_lock(mythread_mutex_t *mutex);
+
+int mythread_mutex_unlock(mythread_mutex_t *mutex);
 
 #endif
