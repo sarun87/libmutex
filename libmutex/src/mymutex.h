@@ -1,14 +1,13 @@
 /* Group Info - 
-ksriram Arun Sriraman
+asriram Arun Sriraman
 shyamp Shyam Prasad
 vineet Vineet Krishnan
 */
 
-#include "mythread.h"
-
 #ifndef __MYMUTEX_H
 #define __MYMUTEX_H
 
+#include "myqueue.h"
 
 #define MUTEX_LOCKED 1
 #define MUTEX_UNLOCKED 0

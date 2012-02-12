@@ -5,6 +5,7 @@ vineet Vineet Krishnan
 */
 
 #include "mymutex.h"
+#include "mythread.h"
 
 int mythread_mutex_init(mythread_mutex_t *mutex, const mythread_mutexattr_t *attr)
 {
