@@ -1,9 +1,13 @@
-#include "mythread.h"
-#include "myqueue.h"
-#include "mymutex.h"
-
+/* Group Info - 
+asriram Arun Sriraman
+shyamp Shyam Prasad
+vineet Vineet Krishnan
+*/
 #ifndef __MYCOND_H
 #define __MYCOND_H
+
+#include "myqueue.h"
+#include "mymutex.h"
 
 typedef struct mythread_cond
 {

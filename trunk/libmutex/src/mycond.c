@@ -5,6 +5,7 @@ vineet Vineet Krishnan
 */
 
 #include "mycond.h"
+#include "mythread.h"
 
 int mythread_cond_init(mythread_cond_t *cond, const mythread_condattr_t *attr)
 {
