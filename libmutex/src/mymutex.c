@@ -1,5 +1,5 @@
 /* Group Info - 
-ksriram Arun Sriraman
+asriram Arun Sriraman
 shyamp Shyam Prasad
 vineet Vineet Krishnan
 */
@@ -8,18 +8,15 @@ vineet Vineet Krishnan
 
 int mythread_mutex_init(mythread_mutex_t *mutex, const mythread_mutexattr_t *attr)
 {
-	//mutex->block_queue = (mythread_queue_t) malloc (sizeof(struct mythread_queue));
 	mutex->lock = 0;
-	//mutex->owner = mythread_self();
+	return 0;
 }
-
 
 int mythread_mutex_destroy(mythread_mutex_t *mutex)
 {
-	//free(mutex->block_queue);
 	mutex->block_queue = NULL;
 	mutex->lock = 0;
-	mutex->owner = 0;
+	return 0;
 }
 
 int mythread_mutex_lock(mythread_mutex_t *mutex)
@@ -35,12 +32,18 @@ int mythread_mutex_lock(mythread_mutex_t *mutex)
 	}
 }
 
-
 int mythread_mutex_unlock(mythread_mutex_t *mutex)
 {
 	mythread_enter_kernel();
 	mutex->lock = MUTEX_UNLOCKED;
 	mythread_leave_kernel();
+	return 0;
+}
+
+//Just for shyam
+int __test_and_set(mythread_mutex_t *mutex)
+{
+	return compare_and_swap(&mutex->lock,MUTEX_LOCKED,MUTEX_UNLOCKED);
 }
 
 int __test_test_and_set(mythread_mutex_t *mutex)
@@ -49,7 +52,7 @@ int __test_test_and_set(mythread_mutex_t *mutex)
 	while (counter > 0)
 	{
 		while ( mutex->lock == MUTEX_LOCKED);
-		if ( compare_and_swap(&mutex->lock,MUTEX_UNLOCKED,MUTEX_LOCKED) == MUTEX_UNLOCKED)
+		if (__test_and_set(mutex)  == MUTEX_UNLOCKED)
 		{
 			return 0;
 		}

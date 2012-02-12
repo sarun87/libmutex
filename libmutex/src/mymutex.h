@@ -5,7 +5,6 @@ vineet Vineet Krishnan
 */
 
 #include "mythread.h"
-#include "futex.h"
 
 #ifndef __MYMUTEX_H
 #define __MYMUTEX_H
@@ -16,7 +15,6 @@ vineet Vineet Krishnan
 
 typedef struct mythread_mutex_t
 {
-	int owner;
 	unsigned int lock;
 	mythread_queue_t block_queue;
 } mythread_mutex_t;
@@ -35,4 +33,6 @@ int mythread_mutex_lock(mythread_mutex_t *mutex);
 int mythread_mutex_unlock(mythread_mutex_t *mutex);
 
 int __test_test_and_set(mythread_mutex_t *mutex);
+int __test_and_set(mythread_mutex_t *mutex);
+
 #endif
