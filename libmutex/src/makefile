@@ -1,10 +1,18 @@
+###########################################################
+##MAKE FILE - P5
+###########################################################
+
+
 FILES= mymutex.c mycond.c mytest.c
-FLAGS= -lmythread -I . -L .
+FLAGS= -g -I . -L .
+LIB=mythread.a
 
 all: test
 
 test: $(FILES)
-	gcc -g $(FILES) $(FLAGS) -o runMe
+	gcc -c $(FILES) $(FLAGS)
+	gcc -o mytest $(FILES:.c=.o) $(LIB) $(FLAGS) 
 
 clean: 
-	rm -f runMe
+	rm -f mytest
+	rm -f *.o
