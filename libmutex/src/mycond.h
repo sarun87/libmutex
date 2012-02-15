@@ -7,7 +7,7 @@ vineet Vineet Krishnan
 #define __MYCOND_H
 
 // User includes
-#include "myqueue.h"
+#include "mythread.h"
 #include "mymutex.h"
 
 // Condition variable mythread_cond_t structure

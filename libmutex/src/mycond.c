@@ -5,7 +5,7 @@ vineet Vineet Krishnan
 */
 
 #include "mycond.h"
-#include "mythread.h"
+
 
 /*
  * See header file for description

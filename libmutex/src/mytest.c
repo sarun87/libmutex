@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include "mythread.h"
+#include "mymutex.h"
+#include "mycond.h"
 
 typedef struct list{
 char *item;
@@ -147,7 +149,7 @@ void retriever(void * arg){
 	
 	// Search from list.
 	retStatus = searchList((char*)arg);
-	sleep(2);
+	//sleep(2);
 	// Print info. Lock for the same.
 	mythread_mutex_lock(&printLock);
 	 printThreadInfo(RETREIVAL, (char*) arg, retStatus, mythread_self());

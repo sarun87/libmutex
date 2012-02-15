@@ -13,11 +13,11 @@
 #define TRUE 1
 #endif
 
-//#include <pthread.h>
+#include <pthread.h>
 #include "myqueue.h"
 #include "futex.h"
-#include "mymutex.h"
-#include "mycond.h"
+//#include "mymutex.h"
+//#include "mycond.h"
 
 typedef struct mythread_attr { /* thread attributes */
   int attr;                    /* not yet used */

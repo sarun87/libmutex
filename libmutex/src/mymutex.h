@@ -7,7 +7,7 @@ vineet Vineet Krishnan
 #ifndef __MYMUTEX_H
 #define __MYMUTEX_H
 
-#include "myqueue.h"
+#include "mythread.h"
 
 /*
  * Mutex values

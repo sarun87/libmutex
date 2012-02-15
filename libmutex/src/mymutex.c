@@ -5,7 +5,6 @@ vineet Vineet Krishnan
 */
 
 #include "mymutex.h"
-#include "mythread.h"
 
 /*
  * See header file for description
