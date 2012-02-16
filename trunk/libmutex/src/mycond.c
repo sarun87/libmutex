@@ -78,6 +78,10 @@ int mythread_cond_broadcast(mythread_cond_t *cond)
 	curr = cond->block_queue;
 	do
 	{
+		if (curr == NULL)
+		{
+			break;
+		}
 		cond->cond_var++;
 		mythread_enter_kernel();
 		mythread_unblock(&(cond->block_queue),0);
