@@ -10,6 +10,76 @@
 #include "mymutex.h"
 #include "mycond.h"
 
+#define MAX_COUNT 50
+int shared;
+mythread_mutex_t global_lock;
+
+
+void *helloClone(void *test)
+{
+	int myPid;
+
+	myPid = (int)(mythread_self())->tid;
+
+	printf("\n%d:Hello, %s\n",myPid,(char *) test);
+	sleep(2);
+	printf("\n%d:Yielding..\n",myPid);
+	mythread_mutex_lock(&global_lock);
+	printf("\nIn critical section.");
+	shared = myPid;
+	mythread_mutex_unlock(&global_lock);
+	printf("\n%d:Set shared to %d.\n",myPid,myPid);
+	printf("\n%d:Exiting.\n",myPid);
+	mythread_exit(NULL);
+	return 0;
+}
+
+void test_case1()
+{
+	int status;
+	mythread_t testThreads[3];
+	int i;
+	status = mythread_mutex_init(&global_lock,NULL);
+	if(status !=0)
+	{
+		printf("Test Case 1: Mutex- init, lock, unlock and destroy.Status: FAIL!\n");
+	}
+
+	//mythread_set_loglevel(VDEBUG | VINFO);
+	for(i = 0; i < 3; i++)
+	{
+		if (mythread_create(&testThreads[i],NULL,helloClone,"World") != 0)
+		{
+			printf("Test Case 1: Mutex- init, lock, unlock and destroy.Status: FAIL!\n");
+			return;
+		}
+		else fprintf(stdout,"Successfully created!\n");
+	}
+
+	for (i = 0; i< 3; i++)
+	{
+		printf("\nWaiting on threads %d..",testThreads[i]);
+		mythread_join(testThreads[i],NULL);
+		printf("\ndone");
+	}
+	status = mythread_mutex_destroy(&global_lock);
+	if(status ==0){
+		printf("\n==============================================");
+		printf("\nTest Case 1: Mutex- init, lock, unlock and destroy.Status: PASS\n");
+		printf("\n==============================================\n");
+	}
+	else
+	{	
+		printf("\n==============================================");
+		printf("Test Case 1: Mutex- init, lock, unlock and destroy.Status: FAIL!\n");
+		printf("\n==============================================\n");
+	}
+	
+}
+
+/*
+ * Method to check functionality of condtion variable.
+ */
 typedef struct list{
 char *item;
 struct list *next;
@@ -17,6 +87,9 @@ struct list *next;
 
 Node *begin = NULL;
 Node *end = NULL;
+
+int mutexTestFail = 0;
+int condSignalTestFail = 0;
 
 #define MAX_THREADS_PER_MARK 30
 
@@ -184,6 +257,10 @@ void deleter(void * arg){
 	mythread_mutex_lock(&searchThreadVarMutex);
 	mythread_mutex_lock(&adderLock);
 	deleteThreads +=1;
+	if(searchThreads !=0 || insertThreads !=0)
+	{
+		condSignalTestFail = 1;
+	}
 	status = removeFromList((char *) arg);	
 	mythread_mutex_lock(&printLock);
 	printThreadInfo(DELETION,(char*)arg, status,mythread_self());
@@ -202,6 +279,10 @@ void adder(void *arg){
 	// Adder Lock
 	mythread_mutex_lock(&adderLock);
 	insertThreads = insertThreads + 1;
+	if(insertThreads > 1)
+	{
+		mutexTestFail = 1;
+	}
 	status = addToList((char*)arg);
 	mythread_mutex_lock(&printLock);
 	printThreadInfo(ADDITION,(char*)arg, status,mythread_self());
@@ -215,25 +296,20 @@ void adder(void *arg){
 	mythread_mutex_unlock(&deleteLock);
 }
 
-
-
-int main(int argc , char** argv){
+void test_case2(){
 	FILE *file;
 	char operationType, word[30][20];
 	mythread_t myThreads[MAX_THREADS_PER_MARK];
 	char space;
 	int threadCount = 0, instructionCount = 0;
 	int retValue, threadIter;
+
 	// Check input
-	if(argc !=2){
-		printf("\nError in arguments. Usage: ./p2 <inputfile>");
-		return -1;
-	}
 	// Read the text file and create threads as per requirements.
-	file = fopen(argv[1], "r");
+	file = fopen("p5TestInput.txt", "r");
 	if(file == NULL){
 		printf("\nError opening file!");
-		return -1;
+		return;
 	}
 	// initialize mutex and condition variables.
 	mythread_mutex_init(&printLock, NULL);
@@ -272,6 +348,37 @@ int main(int argc , char** argv){
 	}
 	fclose(file);
 	printList();
-	return 0;
+	if(condSignalTestFail == 1)
+	{
+		printf("\n==============================================");
+		printf("\nTest-case2 Condition Signal (init, wait and signal). Status - FAIL!");
+		printf("\n==============================================");
+	}
+	else
+	{
+		printf("\n==============================================");
+		printf("\nTest-case2 Condition Signal (init, wait and signal). Status - PASS!");
+		printf("\n==============================================");
+	}
+	if(mutexTestFail == 1)
+	{
+		printf("\n==============================================");
+		printf("\nTest-case2 Mutex (init, lock, unlock). Status - FAIL");
+		printf("\n==============================================\n");
+	}
+	else
+	{
+		printf("\n==============================================");
+		printf("\nTest-case2 Mutex (init, lock, unlock). Status - PASS");
+		printf("\n==============================================\n");
+	}
 }
 
+int main()
+{
+	// Run test case for mutex
+	test_case1();
+
+	// Run test case for condition variable
+	test_case2();
+}
