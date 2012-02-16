@@ -1,3 +1,8 @@
+/* Group Info - 
+asriram Arun Sriraman
+shyamp Shyam Prasad
+vineet Vineet Krishnan
+*/
 #include <stdio.h>
 #include <unistd.h>
 //#include <mythread.h>
@@ -22,7 +27,7 @@ void *helloClone(void *test)
 	myPid = (int)(mythread_self())->tid;
 
 	printf("\n%d:Hello, %s\n",myPid,(char *) test);
-	sleep(2);
+	//sleep(2);
 	printf("\n%d:Yielding..\n",myPid);
 	mythread_mutex_lock(&global_lock);
 	printf("\nIn critical section.");
